@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="FormError ui-state-error" style="display: none;"></div>
+	<div class="tinfo topinfo"></div>
+	<table id="TblGrid_userGrid" class="EditTable ui-common-table">
+		<tbody>
+			<tr rowpos="1" class="FormData" id="tr_seq">
+				<td class="CaptionTD"><label for="seq">번호</label></td>
+				<td class="DataTD"><input type="text" role="textbox"
+					readonly="readonly" id="seq" name="seq" rowid="370" size="20"
+					class="FormElement ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr rowpos="2" class="FormData" id="tr_userId">
+				<td class="CaptionTD"><label for="userId">아이디</label></td>
+				<td class="DataTD"><input type="text" role="textbox"
+					readonly="readonly" id="userId" name="userId" rowid="370" size="20"
+					class="FormElement ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr rowpos="3" class="FormData" id="tr_userName">
+				<td class="CaptionTD"><label for="userName">이름</label></td>
+				<td class="DataTD"><input type="text" role="textbox" size="20"
+					maxlength="15" id="userName" name="userName" rowid="370"
+					class="FormElement ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr rowpos="4" class="FormData" id="tr_nickname">
+				<td class="CaptionTD"><label for="nickname">닉네임</label></td>
+				<td class="DataTD"><input type="text" role="textbox"
+					readonly="readonly" id="nickname" name="nickname" rowid="370"
+					size="20" class="FormElement ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr style="display: none" rowpos="5" class="FormData" id="tr_isAdmin">
+				<td class="CaptionTD"><label for="isAdmin">관리자 권한</label></td>
+				<td class="DataTD"><select role="select" id="isAdmin"
+					name="isAdmin" rowid="370" size="1"
+					class="FormElement ui-widget-content ui-corner-all"><option
+							role="option" value="-">선택</option>
+						<option role="option" value="Y">예</option>
+						<option role="option" value="N">아니오</option></select></td>
+			</tr>
+			<tr rowpos="6" class="FormData" id="tr_createDate">
+				<td class="CaptionTD"><label for="createDate">날짜</label></td>
+				<td class="DataTD"><input type="text" role="textbox"
+					id="createDate" name="createDate" rowid="370" size="20"
+					class="FormElement ui-widget-content ui-corner-all"></td>
+			</tr>
+			<tr class="FormData" style="display: none">
+				<td class="CaptionTD"></td>
+				<td colspan="1" class="DataTD"><input class="FormElement"
+					id="id_g" type="text" name="userGrid_id" value="370"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="binfo topinfo bottominfo"></div>
+</body>
+</html>

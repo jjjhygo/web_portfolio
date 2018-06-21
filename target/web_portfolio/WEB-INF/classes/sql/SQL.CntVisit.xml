@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.pf.dao.CntVisitDao">
+
+<insert id="insert" parameterType="CntVisit">
+insert into iot.cntvisit(user_id, visit_date)
+values(#{userId}, NOW());
+</insert>
+
+<select id="totalCount" resultType="int">
+select count(*) from iot.cntvisit
+</select>
+
+<select id="todayCount" resultType="int">
+select count(*) from iot.cntvisit
+where date_format(visit_date, '%Y-%M-%D')=date_format(now(), '%Y-%M-%D');
+</select>
+
+<select id="visitPaging" resultType="CntVisit" parameterType="HashMap">
+select * from iot.cntvisit order by seq DESC
+limit 0, 5;
+</select>
+
+<select id="getCntVisit" resultType="CntVisit" parameterType="String">
+select * from iot.cntvisit where user_id = #{userId};
+</select>
+
+</mapper>

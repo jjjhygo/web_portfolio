@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.pf.dao.MsgDao">
+
+<select id="countSend" resultType="int" parameterType="String">
+select count(*) from iot.message where userId_send=#{0}
+</select>
+
+<select id="countReceive" resultType="int" parameterType="String">
+select count(*) from iot.message where userId_receive=#{0}
+</select>
+
+<select id="paging" resultType="Msg" parameterType="HashMap">
+select * from iot.message 
+where userId_send = #{userId}
+order by msg_seq desc
+limit #{start}, #{pageArticle};
+</select>
+
+<select id="pagingRe" resultType="Msg" parameterType="HashMap">
+select * from iot.message 
+where userId_receive = #{userId}
+order by msg_seq desc
+limit #{start}, #{pageArticle};
+</select>
+
+<insert id="write" parameterType="Msg">
+insert into iot.message(userId_receive, userId_send, msg_title, msg_contents, send_date)
+values(#{userIdReceive},#{userIdSend}, #{msgTitle}, #{msgContents}, NOW());
+</insert>
+
+<select id="getMsg" resultType="Msg" parameterType="int">
+select * from iot.message where msg_seq=#{0};
+</select>
+
+<update id="chkUpdate" parameterType="Msg">
+update iot.message set msg_check=#{msgCheck} where msg_seq=#{msgSeq};
+</update>
+
+<insert id="makeFriend" parameterType="Friends">
+insert into iot.Friends(my_user_id, friend_user_id, friend_username)
+values(#{myUserId}, #{friendUserId}, #{friendUserName})
+</insert>
+
+<select id="count" resultType="int">
+select count(*) from iot.friends;
+</select>
+
+<select id="fPaging" resultType="Friends" parameterType="HashMap">
+select * from iot.friends
+where my_user_id=#{myUserId}
+order by seq desc
+limit #{start}, #{pageArticle};
+</select>
+
+</mapper>

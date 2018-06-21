@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.pf.dao.UserDao">
+
+<select id = "list" resultType="User">
+	SELECT * FROM iot.user;
+	</select>
+	
+	<insert id = "join" parameterType="User">
+	insert into iot.user(user_id, user_name, user_pw, nickname, email, is_admin, create_date)
+	values(#{userId}, #{userName}, SHA2(MD5(#{userPw}),256), #{nickname}, #{email}, #{isAdmin}, NOW());
+	</insert>
+	
+	<delete id ="delete" parameterType="int">
+	delete from iot.user where seq = #{0};
+	</delete>
+	
+	<update id ="update"  parameterType="User">
+	update iot.user set nickname = #{nickname}, user_name = #{userName}, is_admin=#{isAdmin}, email=#{email}
+	where seq = #{seq};
+	</update>
+	
+
+	<!-- parameterType은 빼먹어도 resultType은 필수기입 -->
+	<select id ="count" resultType="int" >
+	select count(*) from iot.user;
+	</select>
+	
+	<insert id="register" parameterType="HashMap">
+	insert into iot.user(user_id, user_pw, user_name, nickname, email, create_date)
+	values(#{userId}, SHA2(MD5(#{userPw}),256), #{userName}, #{nickname}, #{email}, NOW());
+	</insert>
+	
+	<select id="chkDuplication" resultType= "int" parameterType="String">
+	select count(*) from iot.user where user_id=#{userId};
+	</select>
+	
+	<select id="getEncryptedPw" resultType="String" parameterType="String">
+	select SHA2(MD5(#{password}),256);
+	</select>
+	
+	<select id="getUser" resultType="User" parameterType = "String">
+	select * from iot.user where user_id = #{userId};
+	</select>
+	
+	<select id="findUserBySeq" resultType="User" parameterType = "int">
+	select * from iot.user where seq = #{0};
+	</select>
+	
+	<!-- jqGrid -->
+	<select id="jpaging" resultType="User" parameterType ="HashMap">
+	select seq,
+			user_id,
+			user_name,
+			nickname,
+			is_admin,
+			DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s') AS create_date
+	 from iot.user 
+	<if test="sidx != null and sidx != '' and sord != null and sord !=''">
+	order by ${sidx} ${sord}
+	</if>
+	<if test="start != null and start !='' and rows != null and rows != ''">
+	LIMIT ${start}, ${rows}
+	</if>
+	</select>
+	
+	<select id="clPaging" resultType="User" parameterType="HashMap">
+	select user_id, user_name from iot.user
+	where 1=1
+	<if test="(searchType != null and searchType == 'userName') and searchText !=''">
+	AND user_name LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	
+	<if test="(searchType != null and searchType == 'user_id') and searchText !=''">
+	AND user_id LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	order by seq desc
+	limit #{start}, #{pageArticle}
+	</select>
+	
+</mapper>

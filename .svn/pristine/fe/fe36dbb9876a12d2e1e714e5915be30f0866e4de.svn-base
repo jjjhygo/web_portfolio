@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.pf.dao.BoardDao">
+	<select id="b_list" resultType="Board">
+		select * from iot.free_board;
+	</select>
+	
+	<update id="update" parameterType="Board">
+	update iot.free_board set username=#{userName}, title = #{title}, contents=#{contents}, has_file=#{hasFile}
+	where num = #{num};
+	</update>
+	
+	<select id="count" resultType = "int">
+	select count(*) from iot.free_board
+	where 1=1
+	<if test="(searchType != null and searchType == 'userName') and searchText !=''">
+	AND username LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	<if test="(searchType != null and searchType == 'title') and searchText !=''">
+	AND title LIKE CONCAT('%', #{searchText}, '%')
+		
+		<!-- title LIKE '%#{searchText}%'
+			 title LIKE '%검색어%' -->
+	</if>
+	<if test="(searchType != null and searchType == 'all') and searchText !=''">
+	AND username LIKE CONCAT('%', #{searchText}, '%')
+  	OR title LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	</select>
+	
+	<select id="paging" resultType = "Board" parameterType="HashMap">
+	select *
+	 from iot.free_board
+	where 1=1
+	<if test="(searchType != null and searchType == 'userName') and searchText !=''">
+	AND username LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	
+	<if test="(searchType != null and searchType == 'title') and searchText !=''">
+	AND title LIKE CONCAT('%', #{searchText}, '%')
+		
+		<!-- title LIKE '%#{searchText}%'
+			 title LIKE '%검색어%' -->
+	</if>
+	
+	<if test="(searchType != null and searchType == 'all') and searchText !=''">
+	AND username LIKE CONCAT('%', #{searchText}, '%')
+  	OR title LIKE CONCAT('%', #{searchText}, '%')
+	</if>
+	
+	order by num DESC limit #{start}, #{pageArticle};
+	</select>
+	                                      <!-- mybatis에 pk가 저절로 생선된다는것을 알려줌 -->
+	<insert id="write" parameterType="Board" useGeneratedKeys="true">
+	insert into iot.free_board (username, title, complete_date, contents, user_id, has_file)
+	values (#{userName}, #{title}, NOW(), #{contents}, #{userId}, #{hasFile})
+	                            <!-- num은 컬럼명 -->
+	<selectKey resultType ="int" keyProperty ="num" order="AFTER">
+	select LAST_INSERT_ID()
+	</selectKey>
+	</insert>
+	
+	<update id="updatehits" parameterType="int">
+	update iot.free_board set hits=hits+1 where num=#{num};
+	</update>
+	
+	<select id="findById" resultType="Board" parameterType="int">
+	select * from iot.free_board where num=#{num};
+	</select>
+	
+	<select id="getEncryptedPw" resultType="String" parameterType="String">
+	select SHA2(MD5(#{password}),256);
+	</select>
+	
+	<select id="getUser" resultType="User" parameterType="String">
+	select * from iot.user where user_id=#{userId};
+	</select>
+	
+	<delete id="delete" parameterType="int">
+	delete from iot.free_board where num=#{0};
+	</delete>
+
+	                               
+</mapper>

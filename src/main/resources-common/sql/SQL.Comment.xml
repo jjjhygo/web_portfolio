@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.iot.pf.dao.CommentDao">
+<insert id ="insert" parameterType="Comment">
+insert into iot.comment(boardseq, userseq, nickname, contents, create_date)
+values(#{boardSeq}, #{userSeq}, #{nickname}, #{contents}, NOW());
+</insert>
+<select id="commentList" resultType="Comment" parameterType="int">
+select * from iot.comment where boardseq=#{seq};
+</select>
+
+<delete id="delete" parameterType="int">
+delete from iot.comment where seq=#{seq};
+</delete>
+</mapper>
