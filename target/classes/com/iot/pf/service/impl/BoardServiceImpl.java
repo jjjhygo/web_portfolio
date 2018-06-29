@@ -95,7 +95,6 @@ public class BoardServiceImpl implements BoardService {
 		String getEnPw = dao.getEncryptedPw(pw);
 		User user = dao.getUser(userId);
 		
-		//		String userEncryptedPw=dao.getEncryptedPw(user.getUserPw());
 		return getEnPw.equals(user.getUserPw());
 		}
 	}

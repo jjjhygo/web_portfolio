@@ -56,6 +56,7 @@ public class MsgServiceImpl implements MsgService {
 	@Override
 	public int makeFriend(Friends friend) throws Exception {
 		int result = mDao.makeFriend(friend);
+		System.out.println(result);
 		if(result!=1)throw new Exception();
 		return result;
 	}

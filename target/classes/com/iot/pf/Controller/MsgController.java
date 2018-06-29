@@ -33,9 +33,9 @@ public class MsgController {
 	public ModelAndView goWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
 		log.debug("pparams : friend " + params.get("friendUserId"));
-		if (session.getAttribute("userId") == null) {    // 濡�洹몄�� ��吏� ���� 寃쎌��   
+		if (session.getAttribute("userId") == null) {  //로그인 하지 않았다면
 	         md.setViewName("error/error");
-	         md.addObject("msg", "濡�洹몄�� �� �댁�⑺�댁＜�몄��.");
+	         md.addObject("msg", "로그인을 먼저 해주세요.");
 	         md.addObject("nextLocation", "/gologin.do");
 	         return md;
 	      }     
@@ -72,9 +72,9 @@ public class MsgController {
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
 		
-		if (session.getAttribute("userId") == null) {    // 濡�洹몄�� ��吏� ���� 寃쎌��   
+		if (session.getAttribute("userId") == null) {  //로그인 하지 않았다면
 	         md.setViewName("error/error");
-	         md.addObject("msg", "濡�洹몄�� �� �댁�⑺�댁＜�몄��.");
+	         md.addObject("msg", "로그인을 먼저 해주세요.");
 	         md.addObject("nextLocation", "/gologin.do");
 	         return md;
 	      }
@@ -82,13 +82,13 @@ public class MsgController {
 		int totalArticle = 0;
 		if(params.get("send")!=null) {
 			String userIdSend = params.get("send");
-			totalArticle = ms.countSend(userIdSend);//珥� 寃���湲� ��
+			totalArticle = ms.countSend(userIdSend);//보낸 쪽지 총 쪽지 수
 		} 
 		if(params.get("receive")!=null) {
 			String userIdreceive = params.get("receive");
-			totalArticle = ms.countReceive(userIdreceive);//珥� 寃���湲� ��
+			totalArticle = ms.countReceive(userIdreceive);//받은 쪽지 총 쪽지 수
 		} 
-		int pageArticle = 10; //���댁� �� 寃���湲� ��
+		int pageArticle = 10; //페이지당 쪽지수
 		int currentPageNo = 1;
 		if(params.containsKey("currentPageNo")) {
 			currentPageNo = Integer.valueOf(params.get("currentPageNo"));
@@ -107,7 +107,7 @@ public class MsgController {
 		P.put("pageArticle", pageArticle);
 		P.put("userId", userId);
 		
-		if(params.get("send")!=null) {
+		if(params.get("send")!=null) {//보낸쪽지함
 			md.addObject("send", params.get("send"));
 			ArrayList<Msg> result = ms.paging(P);
 			md.addObject("result", result);
@@ -118,7 +118,7 @@ public class MsgController {
 			md.addObject("pageBlockStart", pageBlockStart);
 			md.setViewName("msg/listMsgSend");
 		}
-		if(params.get("receive")!=null) {
+		if(params.get("receive")!=null) {//받은쪽지함
 			md.addObject("receive", params.get("receive"));
 			ArrayList<Msg> result = ms.pagingRe(P);
 			md.addObject("result", result);
@@ -129,7 +129,6 @@ public class MsgController {
 			md.addObject("pageBlockStart", pageBlockStart);
 			md.setViewName("msg/listMsgReceive");
 		}
-		
 		return md;
 	}
 	
@@ -205,9 +204,9 @@ public class MsgController {
 		ModelAndView md = new ModelAndView();
 //		ArrayList<User> user = us.getUserList();
 //		md.addObject("user", user);
-		int totalArticle = ms.count(); //珥� 寃���湲� ��
+		int totalArticle = ms.count(); //총 게시글 수
 		System.out.println(totalArticle);
-		int pageArticle = 10; //���댁� �� 寃���湲� ��
+		int pageArticle = 10; //페이지 당 게시글 수
 		int currentPageNo = 1;
 		if(params.containsKey("currentPageNo")) {
 			currentPageNo = Integer.valueOf(params.get("currentPageNo"));
@@ -225,8 +224,6 @@ public class MsgController {
 		P.put("myUserId", session.getAttribute("userId"));
 		P.put("start", startArticleNo);
 		P.put("pageArticle", pageArticle);
-		P.put("searchType", params.get("searchType")); //寃��� 援щ�
-		P.put("searchText", params.get("searchText")); //寃�����
 
 		ArrayList<Friends> result = ms.fPaging(P);
 		
@@ -265,7 +262,7 @@ public class MsgController {
 			ms.makeFriend(friend);
 		} catch (Exception e) {
 			e.printStackTrace();
-			md.addObject("msg", "<font color=green><b>移�援ъ�媛� �ㅻ� </b></font>");
+			md.addObject("msg", "<font color=green><b>오류가 발생했습니다.</b></font>");
 			RedirectView rv = new RedirectView("/web_portfolio/msg/goMakeFriends.do");
 			md.setView(rv);
 		}

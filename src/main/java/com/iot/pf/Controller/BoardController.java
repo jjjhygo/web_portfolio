@@ -46,10 +46,10 @@ public class BoardController {
 	public ModelAndView list(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
 		log.debug("/bbs/free/list.do - params : " + params);
-
-		int totalArticle = bs.count(); //珥� 寃���湲� ��
+		//게시글 페이지
+		int totalArticle = bs.count(); //총 게시글 수
 		System.out.println(totalArticle);
-		int pageArticle = 10; //���댁� �� 寃���湲� ��
+		int pageArticle = 10; //페이지당 게시글 수
 		int currentPageNo = 1;
 		if(params.containsKey("currentPageNo")) {
 			currentPageNo = Integer.valueOf(params.get("currentPageNo"));
@@ -65,8 +65,8 @@ public class BoardController {
 		HashMap<String, Object> P = new HashMap<String, Object>();
 		P.put("start", startArticleNo);
 		P.put("pageArticle", pageArticle);
-		P.put("searchType", params.get("searchType")); //寃��� 援щ�
-		P.put("searchText", params.get("searchText")); //寃�����
+		P.put("searchType", params.get("searchType")); //검색 유형
+		P.put("searchText", params.get("searchText")); //검색어
 
 		ArrayList<Board> result = bs.paging(P);
 
@@ -87,23 +87,22 @@ public class BoardController {
 	@RequestMapping("/goWrite.do")
 	public ModelAndView goWrite(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
-		if(session.getAttribute("userId")!=null) {
+		if(session.getAttribute("userId")!=null) {//로그인 한다면
 			md.addObject("num", params.get("num"));
 			md.addObject("currentPageNo", params.get("currentPageNo"));
 			md.setViewName("/bbs/free/write");
 		}
-		else {
+		else {//로그인이 안된다면
 			md.setViewName("error/error");
 			md.addObject("nextLocation", "/login.do");
-			md.addObject("msg", "濡�洹몄�� 癒쇱�� ���몄��.");
+			md.addObject("msg", "로그인 도중 오류가 발생하였습니다.");
 		}
 		return md;
 	}
-	@RequestMapping("/write.do")                                                                 //���쇱�� 諛����� ���� 留ㅺ�蹂���
+	@RequestMapping("/write.do")                                                                 //파일을 업로드 하기 위한
 	public ModelAndView write(@RequestParam HashMap<String, String> params, HttpSession session, MultipartHttpServletRequest mReq) {
 		ModelAndView md = new ModelAndView();
 		log.debug("/write.do - paramss : " + params);
-		//input��洹� name
 		List<MultipartFile> mFiles = mReq.getFiles("attachFile");
 		String hasFile = "0";
 		for(MultipartFile f : mFiles) {
@@ -115,7 +114,6 @@ public class BoardController {
 			log.debug("getOriginalFilename() : "+ f.getOriginalFilename());
 			log.debug("getContentType() : "+ f.getContentType());
 		}*/
-
 		Board board = new Board();
 		board.setUserName(params.get("userName"));
 		board.setUserId(params.get("userId"));
@@ -128,7 +126,7 @@ public class BoardController {
 		try {
 			bs.writeWithFile(board, mFiles);
 		} catch (Exception e) {
-			e.getMessage().equals("湲��곌린 �ㅻ�ㄴㄴㄴㅇㅇㅇ");
+			e.getMessage().equals("파일 첨부 중 오류가 발생하였습니다.");
 			e.printStackTrace();
 			md.setViewName("bbs/free/write");
 			return md;
@@ -147,9 +145,7 @@ public class BoardController {
 		try {
 			board=bs.readArticle(seq);
 			if(board.getHasFile().equals("1")) {
-				//1.泥⑤����� �곗�댄�� 媛��몄�ㅺ린.
 				ArrayList<Attachment> aList = as.getAttachment("free", board.getNum());
-				//2.媛��몄�� 泥⑤����� �곗�댄�� jsp���� �곌린���� �ｌ�댁＜湲�.
 				md.addObject("attachments", aList);
 
 			}
@@ -187,15 +183,14 @@ public class BoardController {
 		System.out.println(board);
 		String userId= board.getUserId();
 		String pw = params.get("password");
-		//濡�洹몄�명�� ���대���� 湲����깆���� ���대��媛� 媛��ㅻ㈃
+		//로그인한 상태이고 로그인한 아이디와 작성자와 같다면
 		if(session.getAttribute("userId")!=null&&session.getAttribute("userId").equals(params.get("userId"))) {
-			//�⑥�ㅼ������ �쇱���硫� ����
+			//아이디와 비밀번호를 비교해서 맞다면
 			if(bs.comparePw(userId, pw, pass)) {
 				try {
 					log.debug("paramss : "+params);
 					bs.delete(params);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					RedirectView rv = new RedirectView("/web_portfolio/bbs/free/readArticle.do?currentPageNo="+params.get("currentPageNo")+"&num="+params.get("num"));
 					md.setView(rv);
@@ -234,11 +229,11 @@ public class BoardController {
 		List<Attachment> attaches = null;
 
 		if(!pass.equals("true")) {
-			//寃���湲� 鍮�諛�踰��몄�� 濡�洹몄�명�� Id�� 鍮�諛�踰��멸� �쇱���硫�]
+			//글 작성자의 비밀번호가 맞다면
 			if(bs.comparePw(userId, pw, pass)) {
 				md.setViewName("bbs/free/update");
-				Board board = bs.findById(seq); //寃���湲� 1嫄� 遺��ъ�ㅺ린
-				if(board.getHasFile().equals("1")) {//泥⑤����쇱�� 議댁�ы���ㅻ㈃
+				Board board = bs.findById(seq); //해당 번호의 글 정보 가져오기
+				if(board.getHasFile().equals("1")) {//첨부파일이 있다면
 					attaches = as.getAttachment("free", board.getNum());
 				}
 				md.addObject("attachments", attaches);
@@ -255,8 +250,8 @@ public class BoardController {
 		}
 		else {
 			md.setViewName("bbs/free/update");
-			Board board = bs.findById(seq); //寃���湲� 1嫄� 遺��ъ�ㅺ린
-			if(board.getHasFile().equals("1")) {//泥⑤����쇱�� 議댁�ы���ㅻ㈃
+			Board board = bs.findById(seq); 
+			if(board.getHasFile().equals("1")) {
 				attaches = as.getAttachment("free", board.getNum());
 			}
 			md.addObject("attachments", attaches);
@@ -272,16 +267,14 @@ public class BoardController {
 	public ModelAndView update(@RequestParam HashMap<String, String> params, HttpSession session, MultipartHttpServletRequest mReq) {
 		ModelAndView md = new ModelAndView();
 		int seq = Integer.parseInt(params.get("num"));
-		//jsp���� 諛��� ���쇰�명�곕�� board 媛�泥댁�� ����
-		Board board=bs.findById(seq);//寃���湲� 1嫄� 遺��ъ�ㅺ린
+		Board board=bs.findById(seq);//해당 번호의 글 정보 가져오기
 
 		List<MultipartFile> mFiles =null;
 		String hasFile = "0";
-
 		if(board.getHasFile().equals("0")) {
 			mFiles=mReq.getFiles("attachFile");
 			for(MultipartFile f : mFiles) {
-				hasFile = !f.isEmpty() ? "1" : "0"; //���� �����쇰�� ���ㅻ㈃ 1
+				hasFile = !f.isEmpty() ? "1" : "0"; //첨부파일이 존재하면 1 없으면 0
 				if(hasFile.equals("1")) break;
 			}
 		}
@@ -291,7 +284,6 @@ public class BoardController {
 		String contents = params.get("contents");
 		contents = contents.replaceAll("(!?)<br */?>", "\n");
 		board.setContents(contents);
-
 		try {
 			bs.update(board, mFiles);
 		} catch (Exception e) {
@@ -300,14 +292,12 @@ public class BoardController {
 			md.setView(rv);
 			return md;
 		}
-
 		RedirectView rv = new RedirectView("/web_portfolio/bbs/free/list.do?currentPageNo="+params.get("currentPageNo"));
 		md.setView(rv);
-
 		md.addObject("board", board);
-
 		return md;
 	}
+	
 	@RequestMapping("/bbs/free/fileDownload.do")
 	@ResponseBody
 	public byte[] fileDownload(@RequestParam HashMap<String, String> params, HttpServletResponse rep) {
@@ -318,6 +308,7 @@ public class BoardController {
 		//3. response�� ��蹂� ����
 		return fUtil.getDownloadFileBytes(attach, rep);
 	}
+	
 	@RequestMapping("/delAttach.do")
 	public ModelAndView delAttach(@RequestParam HashMap<String, String> params) {
 		ModelAndView md = new ModelAndView();

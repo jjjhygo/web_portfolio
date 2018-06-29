@@ -79,8 +79,7 @@ $(document).ready(function() {
 						<c:forEach items="${result}" var="result">
 							<tr>
 								<td>${result.num}</td>
-								<td class="tleft"><span class="bold"> <a
-										href="/web_portfolio/bbs/free/readArticle.do?currentPageNo=${currentPageNo}&num=${result.num}">
+								<td class="tleft"><span class="bold"> <a href="/web_portfolio/bbs/free/readArticle.do?currentPageNo=${currentPageNo}&num=${result.num}">
 											${result.title} </a></span></td>
 								<td>${result.userName}</td>
 								<td>${result.completeDate}</td>

@@ -205,9 +205,9 @@ public class MsgController {
 		ModelAndView md = new ModelAndView();
 //		ArrayList<User> user = us.getUserList();
 //		md.addObject("user", user);
-		int totalArticle = ms.count(); //珥� 寃���湲� ��
+		int totalArticle = ms.count(); //총 게시글 수
 		System.out.println(totalArticle);
-		int pageArticle = 10; //���댁� �� 寃���湲� ��
+		int pageArticle = 10; //페이지 당 게시글 수
 		int currentPageNo = 1;
 		if(params.containsKey("currentPageNo")) {
 			currentPageNo = Integer.valueOf(params.get("currentPageNo"));
@@ -225,8 +225,6 @@ public class MsgController {
 		P.put("myUserId", session.getAttribute("userId"));
 		P.put("start", startArticleNo);
 		P.put("pageArticle", pageArticle);
-		P.put("searchType", params.get("searchType")); //寃��� 援щ�
-		P.put("searchText", params.get("searchText")); //寃�����
 
 		ArrayList<Friends> result = ms.fPaging(P);
 		
@@ -265,7 +263,7 @@ public class MsgController {
 			ms.makeFriend(friend);
 		} catch (Exception e) {
 			e.printStackTrace();
-			md.addObject("msg", "<font color=green><b>移�援ъ�媛� �ㅻ� </b></font>");
+			md.addObject("msg", "<font color=green><b>오류가 발생했습니다.</b></font>");
 			RedirectView rv = new RedirectView("/web_portfolio/msg/goMakeFriends.do");
 			md.setView(rv);
 		}

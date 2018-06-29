@@ -91,10 +91,9 @@ function docmtDelete(seq){
 	<div class="board_area">
 		<form name="readForm">
 			<input type="hidden" name="id" id="id" value="${sessionScope.userId}"></input>
-			<input type="hidden" name="userId" id="userId"
-				value="${board.userId}"></input> <input type="hidden" name="num"
-				value="${board.num}"></input> <input type="hidden"
-				name="currentPageNo" value="${currentPageNo}"></input>
+			<input type="hidden" name="userId" id="userId" value="${board.userId}"></input>
+			<input type="hidden" name="num" value="${board.num}"></input>
+			<input type="hidden" name="currentPageNo" value="${currentPageNo}"></input>
 			<fieldset>
 				<legend>게시물 상세 내용</legend>
 				<!-- board detail table -->

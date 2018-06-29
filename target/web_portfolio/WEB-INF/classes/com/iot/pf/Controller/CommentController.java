@@ -28,7 +28,7 @@ public class CommentController {
 	public ModelAndView cmtInsert(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
 		System.out.println("--------------"+params);
-		User user = us.getUser(String.valueOf(params.get("userId")));
+		User user = us.getUser(String.valueOf(session.getAttribute("userId")));
 		int boardSeq = Integer.parseInt(params.get("num"));
 		int userSeq = Integer.valueOf(user.getSeq());
 		String contents = params.get("contents");

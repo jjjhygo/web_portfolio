@@ -32,7 +32,7 @@ public class IndexController {
 		P.put("totalCount", endCount);
 		P.put("startCount", startCount);
 		
-		
+		//총방문자와 일일방문자를 담아서 index jsp로 보낸다. 
 		ArrayList<CntVisit> result = cvs.visitPaging(P);
 		int totalCount = cvs.totalCount();
 		int todayCount = cvs.todayCount();

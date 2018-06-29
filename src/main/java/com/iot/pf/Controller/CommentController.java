@@ -28,12 +28,12 @@ public class CommentController {
 	public ModelAndView cmtInsert(@RequestParam HashMap<String, String> params, HttpSession session) {
 		ModelAndView md = new ModelAndView();
 		System.out.println("--------------"+params);
-		User user = us.getUser(String.valueOf(params.get("userId")));
+		User user = us.getUser(String.valueOf(session.getAttribute("userId")));//로그인한 아이디의 유저 정보 가져오기
 		int boardSeq = Integer.parseInt(params.get("num"));
 		int userSeq = Integer.valueOf(user.getSeq());
 		String contents = params.get("contents");
 		
-		Comment comment = new Comment(); 
+		Comment comment = new Comment();
 		comment.setNickname(user.getNickname());
 		comment.setUserSeq(userSeq);
 		comment.setBoardSeq(boardSeq);
@@ -45,13 +45,11 @@ public class CommentController {
 			RedirectView rv = new RedirectView("/web_portfolio/bbs/free/readArticle.do?currentPageNo="+params.get("currentPageNo"));
 			md.setView(rv);
 		} catch (AnomalyException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RedirectView rv = new RedirectView("/web_portfolio/bbs/free/readArticle.do?currentPageNo="+params.get("currentPageNo"));
 			md.setView(rv);
 			return md;
 		}
-		
 		return md;
 		
 	}

@@ -25,13 +25,12 @@ public class MailController {
 	public ModelAndView goSendMessage(@RequestParam Map<String, String> params, HttpSession session) {
 		ModelAndView md= new ModelAndView();
 		
-		if (session.getAttribute("userId") == null) {    // 濡�洹몄�� ��吏� ���� 寃쎌��   
+		if (session.getAttribute("userId") == null) { //로그인하지 않았다면
 	         md.setViewName("error/error");
-	         md.addObject("msg", "濡�洹몄�� �� �댁�⑺�댁＜�몄��.");
+	         md.addObject("msg", "");
 	         md.addObject("nextLocation", "/gologin.do");
 	         return md;
 	      }
-		
 		md.setViewName("mail/mail");
 		return md;
 	}
@@ -39,20 +38,17 @@ public class MailController {
 	@RequestMapping("/sendMessage.do")
 	public ModelAndView sendMessage(@RequestParam Map<String, String> params){
 		ModelAndView md = new ModelAndView();
-		System.out.println("================"+params);
-		
 		try {
 			mUtil.sendEmail(params);
-
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			md.setViewName("error/error");
-	        md.addObject("msg", "硫��쇱�� 蹂대�몃�� ��以� �ㅻ�媛� 諛��������듬����.");
+	        md.addObject("msg", "메일을 보내는 도중 오류가 발생하였습니다.");
 	        md.addObject("nextLocation", "/index.do");
 		}
 		md.setViewName("error/error");
-        md.addObject("msg", "�깃났���쇰� 硫��쇱�� 蹂대���듬���� Thank you :)");
+        md.addObject("msg", "메일이 성공적으로 전송되었습니다. Thank you :)");
         md.addObject("nextLocation", "/index.do");
 		
 		return md;
