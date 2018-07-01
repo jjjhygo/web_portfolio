@@ -153,7 +153,7 @@ public class BoardController {
 			e.printStackTrace();
 			switch(e.getMessage()) {
 			case "UPDATE_HITS_ERROR":
-				md.addObject("msg", "<font color=red><b>議고���� 利�媛� �ㅻ�</b></font>");
+				md.addObject("msg", "<font color=red><b>오류가 발생하였습니다.</b></font>");
 				RedirectView rv = new RedirectView("/web_portfolio/bbs/free/list.do");
 			}
 		}
