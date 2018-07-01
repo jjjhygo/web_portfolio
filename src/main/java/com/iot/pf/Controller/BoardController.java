@@ -166,11 +166,13 @@ public class BoardController {
 		md.setViewName("bbs/free/read");
 		return md;
 	}
-	/*�쎄린 -> delete.do
+	
+	
+	/* delete.do
 		seq, password, userId
-	1.password ���명��
-	2.寃���湲� ���깆�� ��蹂대�� 媛��몄��
-	3.(1) (2) 鍮�援�
+	1.password 맞는지 비교
+	2.로그인한 아이디와 작성자 아이디 비교
+	3.(1) (2) 후 삭제
 	 */
 	@RequestMapping("/delete.do")
 	public ModelAndView delete(@RequestParam HashMap<String, String> params, HttpSession session) {
@@ -301,11 +303,11 @@ public class BoardController {
 	@RequestMapping("/bbs/free/fileDownload.do")
 	@ResponseBody
 	public byte[] fileDownload(@RequestParam HashMap<String, String> params, HttpServletResponse rep) {
-		//1. 泥⑤����쇱�� seq 爰쇰�닿린
+		//1. 첨부파일의 글번호를 가져오기.
 		int seq = Integer.parseInt(params.get("attachSeq"));
-		//2. seq�� �대�뱁���� 泥⑤����� 1嫄� 媛��몄�ㅺ린
+		//2. 가져온 글번호로 글정보를 가져와 Attachment 객체에 담기.
 		Attachment attach = as.findById(seq);
-		//3. response�� ��蹂� ����
+		//3. 글정보를 통해 fUtil 참조해 파일 다운로드
 		return fUtil.getDownloadFileBytes(attach, rep);
 	}
 	

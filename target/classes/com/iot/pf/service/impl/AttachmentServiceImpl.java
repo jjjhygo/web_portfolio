@@ -26,13 +26,11 @@ public class AttachmentServiceImpl implements AttachmentService {
 	
 	@Override
 	public int insert(Attachment attach) {
-		// TODO Auto-generated method stub
 		return aDao.insert(attach);
 	}
 
 	@Override
 	public ArrayList<Attachment> getAttachment(String docType, int seq) {
-		// TODO Auto-generated method stub
 		return aDao.getAttachment(docType, seq);
 	}
 
